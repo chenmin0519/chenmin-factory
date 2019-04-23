@@ -1,0 +1,23 @@
+server:
+  port: 8080
+spring:
+  profiles: dev
+
+swagger:
+#  enable: true
+#  o-auth2:
+#    enable: true
+#    app-key: api
+#    app-name: 基础api
+#    authorization-url: http://192.168.19.22:8840/se/oauth/authorize
+#    authorization-url:
+  apis:
+    user:
+      packageName: com.chenmin.api.controller
+      author:
+        name: chenmin
+---
+server:
+  port: 8081
+spring:
+  profiles: drop
