@@ -11,6 +11,11 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import com.google.common.base.Function;
+import com.google.common.base.Optional;
+import com.google.common.base.Predicate;
+import springfox.documentation.RequestHandler;
+
 @SpringBootApplication
 @EnableSwagger2
 public class FactoryConfigrautionApplication {
@@ -23,7 +28,7 @@ public class FactoryConfigrautionApplication {
         return new Docket(DocumentationType.SWAGGER_2)
                 .apiInfo(apiInfo())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("com.chenmin.api.controller"))
+                .apis(basePackage("com.chenmin.api.controller;com.chenmin.api.cons"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -36,4 +41,25 @@ public class FactoryConfigrautionApplication {
                 .contact("chen-min")
                 .build();
     }
+    public static Predicate<RequestHandler> basePackage(final String basePackage) {
+        return input -> declaringClass(input).transform(handlerPackage(basePackage)).or(true);
+    }
+
+    private static Function<Class<?>, Boolean> handlerPackage(final String basePackage)     {
+        return input -> {
+            // 循环判断匹配
+            for (String strPackage : basePackage.split(";")) {
+                boolean isMatch = input.getPackage().getName().startsWith(strPackage);
+                if (isMatch) {
+                    return true;
+                }
+            }
+            return false;
+        };
+    }
+
+    private static Optional<? extends Class<?>> declaringClass(RequestHandler input) {
+        return Optional.fromNullable(input.declaringClass());
+    }
+
 }

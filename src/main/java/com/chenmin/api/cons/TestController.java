@@ -1,4 +1,4 @@
-package com.chenmin.api.controller;
+package com.chenmin.api.cons;
 
 import com.chenmin.factory1.PeopleFactory;
 import com.chenmin.factory1.service.People;
